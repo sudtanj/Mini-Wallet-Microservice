@@ -28,6 +28,15 @@ type DepositOutput struct {
 	ReferenceId string    `json:"reference_id"`
 }
 
+type WithdrawOutput struct {
+	WithdrawnBy string    `json:"withdrawn_by"`
+	Id          uuid.UUID `json:"id"`
+	Status      string    `json:"status"`
+	WithdrawnAt time.Time `json:"withdrawn_at"`
+	Amount      uint      `json:"amount"`
+	ReferenceId string    `json:"reference_id"`
+}
+
 func InitWallet(db *gorm.DB, customerIdx string) *InitWalletReturn {
 	var customerData UserWalletModel
 	result := db.First(&customerData, "owned_by = ?", customerIdx)
@@ -146,5 +155,54 @@ func AddMoney(db *gorm.DB, token string, amount uint, refId string) (*DepositOut
 		DepositedAt: newDeposit.DepositedAt,
 		Amount:      newDeposit.Amount,
 		ReferenceId: newDeposit.ReferenceId,
+	}, nil
+}
+
+func WithdrawMoney(db *gorm.DB, token string, amount uint, refId string) (*WithdrawOutput, error) {
+	tx := db.Begin()
+
+	var customerData UserWalletModel
+	result := tx.First(&customerData, "token = ?", token)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	if customerData.Status == "disabled" {
+		return nil, errors.New("Disabled")
+	}
+
+	var withdrawWallet UserWalletWithdrawModel
+	res := tx.First(&withdrawWallet, "reference_id = ?", refId)
+	if res.Error == nil {
+		return nil, errors.New("Duplicate reference id!")
+	}
+
+	customerData.Balance -= amount
+	if customerData.Balance < 0 {
+		return nil, errors.New("Cannot withdraw due to insufficient balance!")
+	}
+
+	tx.Save(&customerData)
+
+	newWithdraw := UserWalletWithdrawModel{
+		WithdrawnBy: customerData.OwnedBy,
+		Id:          uuid.New(),
+		Status:      "success",
+		WithdrawnAt: time.Now(),
+		Amount:      amount,
+		ReferenceId: refId,
+	}
+
+	tx.Create(&newWithdraw)
+
+	tx.Commit()
+
+	return &WithdrawOutput{
+		WithdrawnBy: newWithdraw.WithdrawnBy,
+		Id:          newWithdraw.Id,
+		Status:      newWithdraw.Status,
+		WithdrawnAt: newWithdraw.WithdrawnAt,
+		Amount:      newWithdraw.Amount,
+		ReferenceId: newWithdraw.ReferenceId,
 	}, nil
 }
