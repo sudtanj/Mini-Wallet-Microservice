@@ -12,4 +12,5 @@
 ```
 go run .
 ```
-- The api by default will be running on http://localhost:80 and the mysql database will be store at the root of the project as "test.db" file
+- the database (sqllite)  will be automatically created and stored at the root of the project as `test.db` file after the project run successfully
+- The api by default will be running on http://localhost:80
