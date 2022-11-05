@@ -240,6 +240,79 @@ func main() {
 		return
 	})
 
+	v1.PATCH("/wallet", func(context *gin.Context) {
+		token := strings.Split(context.Request.Header["Authorization"][0], " ")[1]
+
+		if len(token) == 0 {
+			context.JSON(400, gin.H{
+				"status": "fail",
+				"data": gin.H{
+					"error": "Invalid authorization token!",
+				},
+			})
+			return
+		}
+
+		isDisabled := context.PostFormArray("is_disabled")
+		if len(token) == 0 {
+			context.JSON(400, gin.H{
+				"status": "fail",
+				"data": gin.H{
+					"error": "Invalid is_disabled value!",
+				},
+			})
+			return
+		}
+
+		if isDisabled[0] == "false" {
+			result, err := wallet.EnabledWallet(db, token)
+			if err != nil {
+				context.JSON(400, gin.H{
+					"status": "fail",
+					"data": gin.H{
+						"error": err.Error(),
+					},
+				})
+				return
+			}
+			context.JSON(201, gin.H{
+				"status": "success",
+				"data": gin.H{
+					"wallet": result,
+				},
+			})
+			return
+		}
+
+		if isDisabled[0] == "true" {
+			result, err := wallet.DisabledWallet(db, token)
+			if err != nil {
+				context.JSON(400, gin.H{
+					"status": "fail",
+					"data": gin.H{
+						"error": err.Error(),
+					},
+				})
+				return
+			}
+			context.JSON(201, gin.H{
+				"status": "success",
+				"data": gin.H{
+					"wallet": result,
+				},
+			})
+			return
+		}
+
+		context.JSON(400, gin.H{
+			"status": "fail",
+			"data": gin.H{
+				"error": "Invalid parameter!",
+			},
+		})
+		return
+	})
+
 	runErr := r.Run(":80")
 	if runErr != nil {
 		log.Fatalf("Failed to run server: %v", runErr)

@@ -206,3 +206,28 @@ func WithdrawMoney(db *gorm.DB, token string, amount uint, refId string) (*Withd
 		ReferenceId: newWithdraw.ReferenceId,
 	}, nil
 }
+
+func DisabledWallet(db *gorm.DB, token string) (*WalletOutput, error) {
+	var customerData UserWalletModel
+	result := db.First(&customerData, "token = ?", token)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	if customerData.Status == "disabled" {
+		return nil, errors.New("Already disabled")
+	}
+
+	customerData.Status = "disabled"
+	customerData.EnabledAt = time.Now()
+
+	db.Save(&customerData)
+
+	return &WalletOutput{
+		Id:        customerData.Id,
+		OwnedBy:   customerData.OwnedBy,
+		Status:    customerData.Status,
+		EnabledAt: customerData.EnabledAt,
+		Balance:   customerData.Balance,
+	}, nil
+}
