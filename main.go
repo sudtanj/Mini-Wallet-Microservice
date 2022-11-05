@@ -29,8 +29,10 @@ func main() {
 		if len(customerIdx) == 0 || customerIdx[0] == "" {
 			context.JSON(400, gin.H{
 				"status": "fail",
-				"error": gin.H{
-					"customer_xid": "Missing data for required field.",
+				"data": gin.H{
+					"error": gin.H{
+						"customer_xid": &[]string{"Missing data for required field."},
+					},
 				},
 			})
 			return
