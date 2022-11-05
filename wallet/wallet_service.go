@@ -19,6 +19,15 @@ type WalletOutput struct {
 	Balance   uint      `json:"balance"`
 }
 
+type DepositOutput struct {
+	DepositedBy string    `json:"deposited_by"`
+	Id          uuid.UUID `json:"id"`
+	Status      string    `json:"status"`
+	DepositedAt time.Time `json:"deposited_at"`
+	Amount      uint      `json:"amount"`
+	ReferenceId string    `json:"reference_id"`
+}
+
 func InitWallet(db *gorm.DB, customerIdx string) *InitWalletReturn {
 	var customerData UserWalletModel
 	result := db.First(&customerData, "owned_by = ?", customerIdx)
@@ -92,5 +101,50 @@ func ViewWallet(db *gorm.DB, token string) (*WalletOutput, error) {
 		Status:    customerData.Status,
 		EnabledAt: customerData.EnabledAt,
 		Balance:   customerData.Balance,
+	}, nil
+}
+
+func AddMoney(db *gorm.DB, token string, amount uint, refId string) (*DepositOutput, error) {
+	tx := db.Begin()
+
+	var customerData UserWalletModel
+	result := tx.First(&customerData, "token = ?", token)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	if customerData.Status == "disabled" {
+		return nil, errors.New("Disabled")
+	}
+
+	var depositedWallet UserWalletDepositedModel
+	res := tx.First(&depositedWallet, "reference_id = ?", refId)
+	if res.Error == nil {
+		return nil, errors.New("Duplicate reference id!")
+	}
+
+	customerData.Balance += amount
+	tx.Save(&customerData)
+
+	newDeposit := UserWalletDepositedModel{
+		DepositedBy: customerData.OwnedBy,
+		Id:          uuid.New(),
+		Status:      "success",
+		DepositedAt: time.Now(),
+		Amount:      amount,
+		ReferenceId: refId,
+	}
+
+	tx.Create(&newDeposit)
+
+	tx.Commit()
+
+	return &DepositOutput{
+		DepositedBy: newDeposit.DepositedBy,
+		Id:          newDeposit.Id,
+		Status:      newDeposit.Status,
+		DepositedAt: newDeposit.DepositedAt,
+		Amount:      newDeposit.Amount,
+		ReferenceId: newDeposit.ReferenceId,
 	}, nil
 }
