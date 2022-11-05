@@ -6,6 +6,7 @@ import (
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"log"
+	"strings"
 )
 
 func main() {
@@ -24,7 +25,7 @@ func main() {
 		customerIdx := context.PostFormArray("customer_xid")
 		if len(customerIdx) == 0 || customerIdx[0] == "" {
 			context.JSON(400, gin.H{
-				"status": "failed",
+				"status": "fail",
 				"error": gin.H{
 					"customer_xid": "Missing data for required field.",
 				},
@@ -32,6 +33,37 @@ func main() {
 			return
 		}
 		result := wallet.InitWallet(db, customerIdx[0])
+
+		context.JSON(201, gin.H{
+			"status": "success",
+			"data":   result,
+		})
+		return
+	})
+
+	v1.POST("/wallet", func(context *gin.Context) {
+		token := strings.Split(context.Request.Header["Authorization"][0], " ")[1]
+
+		if len(token) == 0 {
+			context.JSON(400, gin.H{
+				"status": "fail",
+				"data": gin.H{
+					"error": "Invalid authorization token!",
+				},
+			})
+			return
+		}
+
+		result, err := wallet.EnabledWallet(db, token)
+		if err != nil {
+			context.JSON(400, gin.H{
+				"status": "fail",
+				"data": gin.H{
+					"error": err.Error(),
+				},
+			})
+			return
+		}
 
 		context.JSON(201, gin.H{
 			"status": "success",
