@@ -74,3 +74,23 @@ func EnabledWallet(db *gorm.DB, token string) (*WalletOutput, error) {
 		Balance:   customerData.Balance,
 	}, nil
 }
+
+func ViewWallet(db *gorm.DB, token string) (*WalletOutput, error) {
+	var customerData UserWalletModel
+	result := db.First(&customerData, "token = ?", token)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	if customerData.Status == "disabled" {
+		return nil, errors.New("Disabled")
+	}
+
+	return &WalletOutput{
+		Id:        customerData.Id,
+		OwnedBy:   customerData.OwnedBy,
+		Status:    customerData.Status,
+		EnabledAt: customerData.EnabledAt,
+		Balance:   customerData.Balance,
+	}, nil
+}

@@ -67,7 +67,42 @@ func main() {
 
 		context.JSON(201, gin.H{
 			"status": "success",
-			"data":   result,
+			"data": gin.H{
+				"wallet": result,
+			},
+		})
+		return
+	})
+
+	v1.GET("/wallet", func(context *gin.Context) {
+		token := strings.Split(context.Request.Header["Authorization"][0], " ")[1]
+
+		if len(token) == 0 {
+			context.JSON(400, gin.H{
+				"status": "fail",
+				"data": gin.H{
+					"error": "Invalid authorization token!",
+				},
+			})
+			return
+		}
+
+		result, err := wallet.ViewWallet(db, token)
+		if err != nil {
+			context.JSON(400, gin.H{
+				"status": "fail",
+				"data": gin.H{
+					"error": err.Error(),
+				},
+			})
+			return
+		}
+
+		context.JSON(200, gin.H{
+			"status": "success",
+			"data": gin.H{
+				"wallet": result,
+			},
 		})
 		return
 	})
