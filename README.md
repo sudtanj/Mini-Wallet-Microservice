@@ -5,6 +5,7 @@
 - GCC (for sqlite)
 
 ## Usage
+### With Docker 
 ### Without Docker
 - Clone this repository 
 - Open your terminal or cmd and change to this project directory on your local machine
