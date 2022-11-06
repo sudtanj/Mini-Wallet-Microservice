@@ -5,9 +5,14 @@
 ## System Requirement
 - Go 1.19 or newer
 - GCC (for sqlite)
+- Docker (if you use the recommended docker usage)
 
 ## Usage
 ### With Docker (Recommended)
+- Run the following command will create instance mini wallet container with db store in memory (not persist). Change [YOUR_SELECTED_PORT] to port that's available on your local machine.
+```
+docker run -p [YOUR_SELECTED_PORT]:80 -e DATABASE_PATH='file::memory:?cache=shared' sudtanj/mini-wallet-microservice:latest
+```
 ### Without Docker
 - Clone this repository 
 - Open your terminal or cmd and change to this project directory on your local machine
