@@ -2,6 +2,8 @@
 ![Github Action](https://github.com/sudtanj/Mini-Wallet-Microservice/actions/workflows/docker-publish.yml/badge.svg)
 [![Docker](https://img.shields.io/docker/cloud/build/eaudeweb/scratch?label=Docker&style=flat)](https://hub.docker.com/r/sudtanj/mini-wallet-microservice/builds)
 
+Warning: this is not production-ready!
+
 ## System Requirement
 - Go 1.19 or newer
 - GCC (for sqlite)
