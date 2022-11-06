@@ -29,6 +29,7 @@ go run .
 This project also provided some example if you want to run the mini wallet inside kubernetes cluster with [Kong](https://konghq.com/) as the api gateway. all that needed is to run the following command 
 inside the project root folder
 ```
+kubectl create namespace mini-wallet
 kubectl apply -f kube.yaml
 ```
 The `kube.yaml` file will use [Kong](https://konghq.com/) as the ingress and will create 2 pods to be served at http://localhost for client outside kubernetes cluster. 
