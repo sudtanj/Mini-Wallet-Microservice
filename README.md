@@ -20,5 +20,5 @@ docker run -p [YOUR_SELECTED_PORT]:80 -e DATABASE_PATH='file::memory:?cache=shar
 ```
 go run .
 ```
-- the database (sqllite)  will be automatically created and stored at the root of the project as `test.db` file after the project run successfully
+- the database (sqllite)  will be automatically created and stored at the root of the project as `test.db` file after the project run successfully You can customize this behaviour in the env file
 - The api by default will be running on http://localhost:80
