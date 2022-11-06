@@ -7,7 +7,8 @@ Warning: this is not production-ready!
 ## System Requirement
 - Go 1.19 or newer
 - GCC (for sqlite)
-- Docker (if you use the recommended docker usage)
+- Docker (if you use the recommended docker or kubernetes usage)
+- Kubernetes (if you use the kubernetes usage)
 
 ## Usage
 ### With Docker (Recommended)
@@ -24,3 +25,11 @@ go run .
 ```
 - the database (sqllite)  will be automatically created and stored at the root of the project as `test.db` file after the project run successfully You can customize this behaviour in the env file
 - The api by default will be running on http://localhost:80
+### With Kubernetes
+This project also provided some example if you want to run the mini wallet inside kubernetes cluster with [Kong](https://konghq.com/) as the api gateway. all that needed is to run the following command 
+inside the project root folder
+```
+kubectl apply -f kube.yaml
+```
+The `kube.yaml` file will use [Kong](https://konghq.com/) as the ingress and will create 2 pods to be served at http://localhost. 
+The service will be served at http://mini-wallet-service:5000 inside kubernetes cluster.
