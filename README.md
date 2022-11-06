@@ -1,11 +1,13 @@
 # Mini Wallet Microservice
+![Github Action](https://github.com/sudtanj/Mini-Wallet-Microservice/actions/workflows/docker-publish.yml/badge.svg)
+[![Docker](https://img.shields.io/docker/cloud/build/eaudeweb/scratch?label=Docker&style=flat)](https://hub.docker.com/r/sudtanj/mini-wallet-microservice/builds)
 
 ## System Requirement
 - Go 1.19 or newer
 - GCC (for sqlite)
 
 ## Usage
-### With Docker 
+### With Docker (Recommended)
 ### Without Docker
 - Clone this repository 
 - Open your terminal or cmd and change to this project directory on your local machine
