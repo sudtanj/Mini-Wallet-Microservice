@@ -31,5 +31,5 @@ inside the project root folder
 ```
 kubectl apply -f kube.yaml
 ```
-The `kube.yaml` file will use [Kong](https://konghq.com/) as the ingress and will create 2 pods to be served at http://localhost. 
+The `kube.yaml` file will use [Kong](https://konghq.com/) as the ingress and will create 2 pods to be served at http://localhost for client outside kubernetes cluster. 
 The service will be served at http://mini-wallet-service:5000 inside kubernetes cluster.
