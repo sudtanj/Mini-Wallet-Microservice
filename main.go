@@ -3,15 +3,22 @@ package main
 import (
 	"Mini-Wallet-Microservice/wallet"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"log"
+	"os"
 	"strconv"
 	"strings"
 )
 
 func main() {
-	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+	envFileLoadErr := godotenv.Load()
+	if envFileLoadErr != nil {
+		println(envFileLoadErr)
+	}
+
+	db, err := gorm.Open(sqlite.Open(os.Getenv("DATABASE_PATH")), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}
