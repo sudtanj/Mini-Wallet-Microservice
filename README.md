@@ -34,3 +34,10 @@ kubectl apply -f kube.yaml
 ```
 The `kube.yaml` file will use [Kong](https://konghq.com/) as the ingress and will create 2 pods to be served at http://localhost for client outside kubernetes cluster. 
 The service will be served at http://mini-wallet-service:5000 inside kubernetes cluster.
+
+## Unit Test
+Unit testing can be verified by running command
+```
+go test ./...
+```  
+Note: not all function has yet unit tested yet! only utils.
