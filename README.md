@@ -2,7 +2,7 @@
 ![Github Action](https://github.com/sudtanj/Mini-Wallet-Microservice/actions/workflows/docker-publish.yml/badge.svg)
 [![Docker](https://img.shields.io/docker/cloud/build/eaudeweb/scratch?label=Docker&style=flat)](https://hub.docker.com/r/sudtanj/mini-wallet-microservice/builds)
 
-Warning: this is not production-ready!
+##### Warning: this is not production-ready!
 
 For the exercise, use this documentation to build an API backend service, for managing a simple mini wallet.
 
