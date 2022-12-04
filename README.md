@@ -16,6 +16,9 @@ The API is a HTTP REST API and the responses are returned in JSON with structure
 
 All the best!
 
+## Documentation 
+[View documentation in Postman](https://documenter.getpostman.com/view/24756256/2s8YzMXjx9#6b3aa090-f4cd-4978-a31b-d2e6ca926d10)
+
 ## System Requirement
 - Go 1.19 or newer
 - GCC (for sqlite)
